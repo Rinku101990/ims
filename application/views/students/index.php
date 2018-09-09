@@ -16,6 +16,7 @@
                 </li>
             </ul>
         </div>
+        <div id="msg"></div>
         <div class="main-container">
             <div class="container-fluid">
                 <div class="row gutter">

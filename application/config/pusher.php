@@ -14,9 +14,9 @@
 | pusher_debug       bool    Turn debug on/off. Debug is logged to CodeIgniters log.
 |
 */
-$config['pusher_app_id']     = '';
-$config['pusher_app_key']    = '';
-$config['pusher_app_secret'] = '';
+$config['pusher_app_id']     = '590738';
+$config['pusher_app_key']    = '9bbc741d94b1b54c35f6';
+$config['pusher_app_secret'] = 'e16356611a3a300f97ff';
 $config['pusher_debug']      = FALSE;
 
 /*

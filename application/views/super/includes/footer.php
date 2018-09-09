@@ -17,23 +17,26 @@
     <script src="<?php echo base_url('assets/js/jvectormap/custom/world-map-markers.js');?>"></script>
     <script src="<?php echo base_url('assets/js/custom.js');?>"></script>
     <script src="<?php echo base_url('assets/js/custom-overview.js');?>"></script>
-	  <script src="<?php echo base_url('assets/js/calendar/fullcalendar.min.js');?>"></script>
+	<script src="<?php echo base_url('assets/js/calendar/fullcalendar.min.js');?>"></script>
     <script src="<?php echo base_url('assets/js/calendar/fullcalendar.js');?>"></script>
-	  <script src="<?php echo base_url('assets/js/datatables/dataTables.min.js');?>"></script>
+	<script src="<?php echo base_url('assets/js/datatables/dataTables.min.js');?>"></script>
     <script src="<?php echo base_url('assets/js/datatables/dataTables.bootstrap.min.js');?>"></script>
     <script src="<?php echo base_url('assets/js/datatables/autoFill.min.js');?>"></script>
     <script src="<?php echo base_url('assets/js/datatables/autoFill.bootstrap.min.js');?>"></script>
     <script src="<?php echo base_url('assets/js/datatables/fixedHeader.min.js');?>"></script>
     <script src="<?php echo base_url('assets/js/datatables/custom-datatables.js');?>"></script>
-	  <script src="<?php echo base_url('assets/js/moment.js');?>"></script>
-	  <script src="<?php echo base_url('assets/js/rating/jquery.raty.js');?>"></script>
+    <script src="<?php echo base_url('assets/js/moment.js');?>"></script>
+    <script src="<?php echo base_url('assets/js/rating/jquery.raty.js');?>"></script>
 
-	  <script src="<?php echo base_url('assets/js/alertify/alertify.js');?>"></script>
+    <script src="<?php echo base_url('assets/js/alertify/alertify.js');?>"></script>
     <script src="<?php echo base_url('assets/js/alertify/alertify-custom.js');?>"></script>
-	  <script src="<?php echo base_url('assets/js/custom-notifications.js');?>"></script>
+	<script src="<?php echo base_url('assets/js/custom-notifications.js');?>"></script>
 
     <script src="<?php echo base_url('assets/js/bootstrap-select.js');?>"></script>
     <script src="<?php echo base_url('assets/js/bootstrap-multiselect.js');?>"></script>
+
+    <link href="<?php echo base_url('assets/css/select2.min.css');?>" rel="stylesheet" />
+    <script src="<?php echo base_url('assets/js/select2.min.js');?>"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -46,6 +49,117 @@
             $("#addTemplates").modal({backdrop: false});
         });
     });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('.js-example-basic-multiple').select2();
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // REDIRECT BASE URL //
+            var base_url = "http://localhost/schools_app/super/";
+
+            // SELECT ALL BY CHECKBOX //
+            $("#checkall").click(function () {
+                $('.checkitem').prop('checked', this.checked);
+            });
+
+            // GET ALL CHECKBOX VALUE IN ARRAY TO SEND MULTIPLE STUDENTS NOTIFICATION //
+            $("#btnSendNotification").click(function(){
+
+                var favorite = [];
+                $.each($("input[name='checkitem[]']:checked"), function(){            
+                    favorite.push($(this).val());
+                });
+
+                //alert($("input[name='checkitem']:checked").size());
+
+                var ids = favorite.join(","); // GET ALL CHECKBOX VALUE IN ARRAY //
+
+                alert(ids);
+            });
+
+            // GET CHECKBOX VALUE TO SINGAL STUDENT NOTIFICATION //
+            // $("#btnSendOnlyNotidication").click(function(){
+            //     var oneid = $("input[name='checkitem']:checked").val();
+            //     alert(oneid);
+            // });
+
+            // DELETE SELECTED STUDENTS RECORD BY THEIR IDS //
+            $("#btnDeleteSelectedStudents").click(function(){
+
+               // GET STUDENT ID BY CHECK BOX // 
+               var studentid = [];
+                $.each($("input[name='checkitem[]']:checked"), function(){            
+                    studentid.push($(this).val());
+                });
+                var selected_student_id = studentid.join(","); // GET ALL CHECKBOX VALUE IN ARRAY //
+
+                // GET HIDDEN MASTER ID OF STUDENTS //
+                var ms_id = [];
+                $("input:hidden.ms_id").each(function() {
+                    ms_id.push($(this).val());
+                });
+                var selected_master_id = ms_id.join(",");
+
+                // CREATE PROCESS OF STUDENTS RECORD DELETION //
+                if(selected_student_id.length ==''){
+
+                    $("#error_page").modal({backdrop: false});
+
+                }else{
+
+                    if(confirm('Are you sure want to delete records!')){
+                        $.ajax({
+                            url:base_url+"students/remove_multiple_students_record",
+                            method:"post",
+                            data:{selected_student_id:selected_student_id,selected_master_id:selected_master_id},
+                            dataType:"json",
+                            success: function(response){
+                                //alert(response);
+                                //console.log(response);
+                                window.location.href = base_url+"students";
+                                $("#MsgStatus").html(response);
+                            }
+                        });
+                    }
+                    return false;
+
+                }
+            });
+
+            // CREATE STUDENDS LISTS IN EXCEL BY THEIR IDS //
+            $("#btnExportExcelFile").click(function(){
+
+               // GET STUDENT ID BY CHECK BOX // 
+               var studentid = [];
+                $.each($("input[name='checkitem[]']:checked"), function(){            
+                    studentid.push($(this).val());
+                });
+                var selected_excel_student_id = studentid.join(","); // GET ALL CHECKBOX VALUE IN ARRAY //
+
+                // CREATE PROCESS OF STUDENTS RECORD DELETION //
+                if(selected_excel_student_id.length ==''){
+
+                    $("#error_page").modal({backdrop: false});
+
+                }else{
+                    $.ajax({
+                        url:base_url+"studentsexcel/student_list",
+                        method:"post",
+                        data:{selected_excel_student_id:selected_excel_student_id},
+                        dataType:"json",
+                        success: function(response){
+                            //alert(response);
+                            //console.log(response);
+                            window.location.href = base_url+"students";
+                            //$("#MsgStatus").html(response);
+                        }
+                    });
+                }
+            });
+        });
     </script>
 
 </body>
